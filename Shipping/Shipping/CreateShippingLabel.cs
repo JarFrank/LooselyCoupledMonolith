@@ -31,6 +31,10 @@ namespace Shipping
 
             var messageId = header.GetMessageId();
             _logger.LogInformation($"MessageId: {messageId}");
+            if (await _dbContext.HasBeenProcessed(messageId, nameof(ShippingLabel)))
+            {
+                return;
+            }
 
             using var trx = _dbContext.Database.BeginTransaction();
             await _dbContext.ShippingLabels.AddAsync(new ShippingLabel
@@ -38,13 +42,13 @@ namespace Shipping
                 OrderId = orderPlaced.OrderId,
                 OrderDate = System.DateTime.UtcNow,
             });
-
             await _dbContext.SaveChangesAsync();
 
             await _publisher.PublishAsync(nameof(ShippingLabelCreated), new ShippingLabelCreated
             {
                 OrderId = orderPlaced.OrderId
             });
+            await _dbContext.IdempotentConsumer(messageId, nameof(ShippingLabel));
 
             await trx.CommitAsync();
         }
