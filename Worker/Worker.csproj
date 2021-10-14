@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <UserSecretsId>dotnet-Worker-E6DC82B7-4732-4A6F-A2D8-205FE146E36C</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DotNetCore.CAP" Version="5.1.4" />
+    <PackageReference Include="DotNetCore.CAP.InMemoryStorage" Version="5.1.4" />
+    <PackageReference Include="DotNetCore.CAP.RabbitMQ" Version="5.1.4" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Sales\Sales\Sales.csproj" />
+    <ProjectReference Include="..\Shipping\Shipping\Shipping.csproj" />
+  </ItemGroup>
+</Project>
